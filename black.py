@@ -1559,12 +1559,25 @@ class Line:
             n.type in TEST_DESCENDANTS for n in subscript_start.pre_order()
         )
 
+    def _fib_number(self, n):
+        if n in (0, 1):
+            return 1
+        return self._fib_number(n-1) + self._fib_number(n - 2)
+
+    def _fib_depth(self, n):
+        if n == 0:
+            return 0
+        return self._fib_number(n - 1) + self._fib_depth(n - 1)
+
+    def _the_indent(self) -> str:
+        return " " * self._fib_depth(self.depth)
+
     def __str__(self) -> str:
         """Render the line."""
         if not self:
             return "\n"
 
-        indent = "    " * self.depth
+        indent = self._the_indent()
         leaves = iter(self.leaves)
         first = next(leaves)
         res = f"{first.prefix}{indent}{first.value}"
